@@ -1,0 +1,32 @@
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=yourStrong(!)Password
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./.data:/var/opt/mssql/data
+    # logging:
+    #   driver: none
+
+  wait:
+    image: wait-for-mssql:latest
+    #command: [ "-S" mssql -U sa -P yourStrong(!)Password -Q 'SELECT * from sys.databases' ]
+    # command:
+    #   - -C
+    #   - -S
+    #   - mssql
+    #   - -U
+    #   - sa
+    #   - -P
+    #   - yourStrong(!)Password
+    #   - -Q
+    #   - SELECT name, state from sys.databases
+
+    depends_on:
+      - mssql
+    build:
+      context: .
+      dockerfile: Dockerfile
