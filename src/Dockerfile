@@ -2,7 +2,7 @@
 # From https://raw.githubusercontent.com/microsoft/mssql-docker/master/linux/mssql-tools/Dockerfile.alpine
 FROM alpine
 
-LABEL maintainer="SQL Server Engineering Team"
+LABEL maintainer="David Gardiner"
 
 RUN apk add curl gnupg
 
