@@ -25,12 +25,6 @@ RUN apk add --allow-untrusted msodbcsql18_18.0.1.1-1_amd64.apk \
 	&& apk add --allow-untrusted mssql-tools18_18.0.1.1-1_amd64.apk \
 	&& rm -f msodbcsql18_18.0.1.1-1_amd64.apk mssql-tools18_18.0.1.1-1_amd64.apk
 
-
-# ./opt/mssql-tools18/bin/sqlcmd
-#CMD /bin/ash 
-# CMD ./opt/mssql-tools18/bin/sqlcmd
-
 COPY wait.sh .
-#ENTRYPOINT [ "./opt/mssql-tools18/bin/sqlcmd" ]
 
-ENTRYPOINT "./wait.sh"
+ENTRYPOINT [ "./wait.sh" ]
