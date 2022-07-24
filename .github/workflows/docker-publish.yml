@@ -79,7 +79,7 @@ jobs:
             ${{ env.IMAGE_NAME }}
           tags: |
             type=schedule
-            type=semver,pattern={{version}}
+            type=semver,pattern={{version}},value=${{ steps.tag_version.new_tag }}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=ref,event=branch
