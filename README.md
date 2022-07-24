@@ -1,5 +1,7 @@
 # Wait for MSSQL
 
+![Docker Image Version (latest semver)](https://img.shields.io/docker/v/flcdrg/wait-for-mssql)
+
 A script that can be run as a Docker image, which waits for a Microsoft SQL Server instance to be ready to accept connections.
 
 When you run SQL Server in a container, it is common for the container to indicate it has started, but in fact, SQL Server is still loading databases. Trying to connect at this time to a specific database would fail.
