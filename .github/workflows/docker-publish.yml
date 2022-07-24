@@ -80,8 +80,8 @@ jobs:
           tags: |
             type=schedule
             type=semver,pattern={{version}},value=${{ steps.tag_version.outputs.new_tag }}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.tag_version.outputs.new_tag }}
+            type=semver,pattern={{major}},value=${{ steps.tag_version.outputs.new_tag }}
             type=ref,event=branch
             type=ref,event=pr
             type=sha
