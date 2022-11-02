@@ -13,7 +13,7 @@ resources:
         SA_PASSWORD: $(MSSQL_SA_PASSWORD)
 
 variables:
-  MSSQL_SA_PASSWORD: yourStrong(!)Password
+  MSSQL_SA_PASSWORD: "yourStrong(!)Password"
 
 pool:
   vmImage: ubuntu-latest
@@ -28,4 +28,7 @@ steps:
     dockerVersion: "20.10.20"
 
 - script: |
-    docker run --rm --network $AGENT_CONTAINERNETWORK flcdrg/wait-for-mssql --server sqlserver --username sa --password $(MSSQL_SA_PASSWORD)
+    echo "docker run --rm --network $(Agent.ContainerNetwork) flcdrg/wait-for-mssql --server sqlserver --username sa --password $(MSSQL_SA_PASSWORD)"
+
+    docker run --rm --network $(Agent.ContainerNetwork) flcdrg/wait-for-mssql --server sqlserver --username sa --password $(MSSQL_SA_PASSWORD)
+  displayName: Run container
