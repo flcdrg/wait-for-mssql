@@ -3,7 +3,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=yourStrong(!)Password
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password
     ports:
       - "1433:1433"
     volumes:
@@ -13,7 +13,7 @@ services:
 
   wait:
     image: wait-for-mssql:latest
-    command: --max 5
+    command: --max 10 --verbose true
 
     depends_on:
       - mssql
