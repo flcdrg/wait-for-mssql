@@ -1,29 +1,22 @@
+FROM alpine as base
+
+RUN apk add curl
+
+# https://github.com/microsoft/go-sqlcmd/releases
+RUN curl -L -o sqlcmd.tar.bz2 https://github.com/microsoft/go-sqlcmd/releases/download/v1.0.0/sqlcmd-v1.0.0-linux-amd64.tar.bz2
+RUN ls -al
+
+RUN tar -xvf sqlcmd.tar.bz2
+
+RUN ls -al
+
 # SQL Server Command Line Tools
 # From https://raw.githubusercontent.com/microsoft/mssql-docker/master/linux/mssql-tools/Dockerfile.alpine
 FROM alpine
 
 LABEL maintainer="David Gardiner"
 
-RUN apk add curl gnupg
-
-#Download the desired package(s)
-RUN curl -O https://download.microsoft.com/download/b/9/f/b9f3cce4-3925-46d4-9f46-da08869c6486/msodbcsql18_18.0.1.1-1_amd64.apk \
-	&& curl -O https://download.microsoft.com/download/b/9/f/b9f3cce4-3925-46d4-9f46-da08869c6486/mssql-tools18_18.0.1.1-1_amd64.apk
-
-
-#(Optional) Verify signature, if 'gpg' is missing install it using 'apk add gnupg':
-RUN curl -O https://download.microsoft.com/download/b/9/f/b9f3cce4-3925-46d4-9f46-da08869c6486/msodbcsql18_18.0.1.1-1_amd64.sig \
-	&& curl -O https://download.microsoft.com/download/b/9/f/b9f3cce4-3925-46d4-9f46-da08869c6486/mssql-tools18_18.0.1.1-1_amd64.sig
-
-RUN curl https://packages.microsoft.com/keys/microsoft.asc  | gpg --import - \
-	&& gpg --verify msodbcsql18_18.0.1.1-1_amd64.sig msodbcsql18_18.0.1.1-1_amd64.apk \
-	&& gpg --verify mssql-tools18_18.0.1.1-1_amd64.sig mssql-tools18_18.0.1.1-1_amd64.apk
-
-
-#Install the package(s)
-RUN apk add --allow-untrusted msodbcsql18_18.0.1.1-1_amd64.apk \
-	&& apk add --allow-untrusted mssql-tools18_18.0.1.1-1_amd64.apk \
-	&& rm -f msodbcsql18_18.0.1.1-1_amd64.apk mssql-tools18_18.0.1.1-1_amd64.apk
+COPY --from=base sqlcmd .
 
 COPY wait.sh .
 
