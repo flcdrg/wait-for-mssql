@@ -29,6 +29,8 @@ state="something"
 count=0
 
 if [ "$verbose" == "true" ]; then
+    ./sqlcmd --version
+    echo ""
     echo "delay: $delay"
     echo "max: $max"
     echo "server: $server"
@@ -36,13 +38,18 @@ if [ "$verbose" == "true" ]; then
     echo "password: $password"
 fi
 
+SQLCMDPASSWORD=$password 
+export SQLCMDPASSWORD
+printenv
+
 while [ "$state" != "" ]; do
     count=$((count+1))
 
     # -C        trust server certificate
     # -h -1     Don't print headings
     # -W        remove trailing spaces
-    state=`/opt/mssql-tools18/bin/sqlcmd -C -S $server -U $username -P "$password" -Q 'SET NOCOUNT ON; SELECT name, state_desc from sys.databases WHERE state NOT IN (0, 6, 10)' -h -1 -W -s " " `
+
+    state=`./sqlcmd -C -S $server -U $username -Q 'SET NOCOUNT ON; SELECT name, state_desc from sys.databases WHERE state NOT IN (0, 6, 10)' --headers="-1" -W -s " " `
 
     if [ $? -ne 0 ]; then
         state="Error connecting"
@@ -51,7 +58,7 @@ while [ "$state" != "" ]; do
     echo "$count of $max: $state"
     sleep $delay
 
-    if [ $count -ge $max ]; then
+    if [ $count -gt $max ]; then
         echo "Giving up after $count attempts"
         exit 1
         break;

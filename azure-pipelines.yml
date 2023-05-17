@@ -10,7 +10,7 @@ resources:
         - 1433
       env:
         ACCEPT_EULA: Y
-        SA_PASSWORD: $(MSSQL_SA_PASSWORD)
+        MSSQL_SA_PASSWORD: $(MSSQL_SA_PASSWORD)
 
 variables:
   MSSQL_SA_PASSWORD: "yourStrong(!)Password"
@@ -27,8 +27,10 @@ steps:
   inputs:
     dockerVersion: "20.10.20"
 
-- script: |
-    echo "docker run --rm --network $(Agent.ContainerNetwork) flcdrg/wait-for-mssql --server sqlserver --username sa --password $(MSSQL_SA_PASSWORD)"
+- pwsh: ./build.ps1
 
-    docker run --rm --network $(Agent.ContainerNetwork) flcdrg/wait-for-mssql --server sqlserver --username sa --password "$(MSSQL_SA_PASSWORD)"
+- script: |
+    echo "docker run --rm --network $(Agent.ContainerNetwork) wait-for-mssql --server sqlserver --username sa --password $(MSSQL_SA_PASSWORD)"
+
+    docker run --rm --network $(Agent.ContainerNetwork) wait-for-mssql --server sqlserver --username sa --password "$(MSSQL_SA_PASSWORD)"
   displayName: Run container
