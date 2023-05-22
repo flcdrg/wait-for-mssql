@@ -15,8 +15,8 @@ If it succeeds it returns 0, but if it fails to connect after a certain number o
 - `--server` - the name of the server hosting SQL Server
 - `--username` - username
 - `--password` - password
-- `--delay` - how many seconds to wait between attempts
-- `--max` - maximum number of connection attempts to make
+- `--delay` - how many seconds to wait between attempts (defaults to 3)
+- `--max` - maximum number of connection attempts to make (defaults to 10)
 
 ## Examples
 
@@ -26,9 +26,13 @@ Connect to a default instance running on `localhost` with username `sa` and pass
 docker run flcdrg/wait-for-mssql
 ```
 
+Connect to a default instance running on `myserver` with username `flcdrg` and password `mySuperPassword(!)`
+
 ```bash
 docker run flcdrg/wait-for-mssql --server myserver --username flcdrg --password mySuperPassword(!)
 ```
+
+Connect to an instance running on `myserver` on port 8000 with username `sa` and password `yourStrong(!)Password`
 
 ```bash
 docker run flcdrg/wait-for-mssql --server myserver,8000
