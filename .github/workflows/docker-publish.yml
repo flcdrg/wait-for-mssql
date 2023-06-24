@@ -15,6 +15,7 @@ env:
   REGISTRY: ghcr.io
   REGISTRY2: docker.io
   IMAGE_NAME: ${{ github.repository }}
+  MSSQL_SA_PASSWORD: yourStrong(!)Password
 
 jobs:
   build:
@@ -26,6 +27,15 @@ jobs:
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
+
+    services:
+      sql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          MSSQL_SA_PASSWORD: ${{ env.MSSQL_SA_PASSWORD }}
+          ACCEPT_EULA: Y
+        ports:
+          - 1433:1433
 
     steps:
       - name: Checkout repository
@@ -96,6 +106,10 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Test
+        run: |
+          docker images
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
