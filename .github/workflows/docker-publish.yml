@@ -112,6 +112,8 @@ jobs:
           docker buildx build --load --tag flcdrg/wait-for-mssql:latest src
           docker images
 
+          docker run flcdrg/wait-for-mssql:latest
+
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
