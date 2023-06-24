@@ -110,10 +110,12 @@ jobs:
       - name: Test
         run: |
           printenv
-          
+
           docker buildx build --load --tag flcdrg/wait-for-mssql:latest src
           docker images
 
+          docker network ls
+          
           docker run --rm --network $(Agent.ContainerNetwork) flcdrg/wait-for-mssql:latest
 
       # Sign the resulting Docker image digest except on PRs.
