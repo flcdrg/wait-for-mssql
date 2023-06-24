@@ -109,7 +109,7 @@ jobs:
 
       - name: Test
         run: |
-          docker buildx build --tag flcdrg/wait-for-mssql:latest src
+          docker buildx build --load --tag flcdrg/wait-for-mssql:latest src
           docker images
 
       # Sign the resulting Docker image digest except on PRs.
