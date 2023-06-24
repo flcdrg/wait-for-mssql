@@ -109,10 +109,12 @@ jobs:
 
       - name: Test
         run: |
+          printenv
+          
           docker buildx build --load --tag flcdrg/wait-for-mssql:latest src
           docker images
 
-          docker run flcdrg/wait-for-mssql:latest
+          docker run --rm --network $(Agent.ContainerNetwork) flcdrg/wait-for-mssql:latest
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
