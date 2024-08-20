@@ -96,7 +96,25 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          load: true # Make image available locally
 
+      # Run SQL Server docker image
+      - name: Run SQL Server
+        if: github.event_name == 'pull_request'
+        run: |
+          docker images
+
+          docker run --name mssql -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+
+      # Test the Docker image
+      - name: Test Docker image
+        if: github.event_name == 'pull_request'
+        run: |
+          docker ps
+
+          # Linux needs the --add-host=host.docker.internal:host-gateway
+          docker run --rm --add-host=host.docker.internal:host-gateway flcdrg/wait-for-mssql:latest
+        
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
