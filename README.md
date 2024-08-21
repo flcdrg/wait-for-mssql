@@ -23,17 +23,23 @@ If it succeeds it returns 0, but if it fails to connect after a certain number o
 Connect to a default instance running on `localhost` with username `sa` and password `yourStrong(!)Password`
 
 ```bash
-docker run flcdrg/wait-for-mssql
+docker run flcdrg/wait-for-mssql:latest
+```
+
+When run on a Linux host, you need to use the [--add-host parameter](https://docs.docker.com/reference/cli/docker/container/run/#add-host):
+
+```bash
+docker run --add-host=host.docker.internal:host-gateway flcdrg/wait-for-mssql:latest
 ```
 
 Connect to a default instance running on `myserver` with username `flcdrg` and password `mySuperPassword(!)`
 
 ```bash
-docker run flcdrg/wait-for-mssql --server myserver --username flcdrg --password mySuperPassword(!)
+docker run flcdrg/wait-for-mssql:latest --server myserver --username flcdrg --password mySuperPassword(!)
 ```
 
 Connect to an instance running on `myserver` on port 8000 with username `sa` and password `yourStrong(!)Password`
 
 ```bash
-docker run flcdrg/wait-for-mssql --server myserver,8000
+docker run flcdrg/wait-for-mssql:latest --server myserver,8000
 ```
