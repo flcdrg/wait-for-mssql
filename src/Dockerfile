@@ -1,9 +1,9 @@
-FROM alpine as base
+FROM alpine AS base
 
 RUN apk add curl
 
 # https://github.com/microsoft/go-sqlcmd/releases
-RUN curl -L -o sqlcmd.tar.bz2 https://github.com/microsoft/go-sqlcmd/releases/download/v1.0.0/sqlcmd-v1.0.0-linux-amd64.tar.bz2
+RUN curl -L -o sqlcmd.tar.bz2 https://github.com/microsoft/go-sqlcmd/releases/download/v1.8.0/sqlcmd-linux-amd64.tar.bz2
 RUN ls -al
 
 RUN tar -xvf sqlcmd.tar.bz2
