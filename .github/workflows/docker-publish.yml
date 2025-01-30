@@ -3,12 +3,13 @@ name: Docker
 on:
   # schedule:
   #   - cron: '19 23 * * *'
-  push:
-    branches: ["main"]
-    # Publish semver tags as releases.
-    tags: ["v*.*.*"]
-  pull_request:
-    branches: ["main"]
+  # push:
+  #   branches: ["main"]
+  #   # Publish semver tags as releases.
+  #   tags: ["v*.*.*"]
+  # pull_request:
+  #   branches: ["main"]
+  workflow_dispatch:
 
 env:
   DOCKERHUB_USERNAME: flcdrg
@@ -27,10 +28,8 @@ jobs:
         include:
           - platform: linux/amd64
             runner: ubuntu-latest
-            platform-short: amd64
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
-            platform-short: arm64
 
     permissions:
       contents: write # to update tags
