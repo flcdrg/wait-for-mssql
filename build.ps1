@@ -1,1 +1,1 @@
-docker build src -f src/Dockerfile -t wait-for-mssql --progress plain
+docker buildx build src --platform linux/amd64,linux/arm64 -f src/Dockerfile -t wait-for-mssql --progress plain
