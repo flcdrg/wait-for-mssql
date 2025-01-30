@@ -4,11 +4,11 @@ on:
   # schedule:
   #   - cron: '19 23 * * *'
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags: ["v*.*.*"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   DOCKERHUB_USERNAME: flcdrg
@@ -18,7 +18,6 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: write # to update tags
@@ -43,6 +42,20 @@ jobs:
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.9.2
+
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       # Workaround: https://github.com/docker/build-push-action/issues/461
       - name: Setup Docker buildx
@@ -92,6 +105,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v6.18.0
         with:
+          platforms: linux/amd64,linux/arm64
           context: src
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
@@ -114,7 +128,7 @@ jobs:
 
           # Linux needs the --add-host=host.docker.internal:host-gateway
           docker run --rm --add-host=host.docker.internal:host-gateway flcdrg/wait-for-mssql:latest
-        
+
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
