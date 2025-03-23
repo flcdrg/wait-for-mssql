@@ -77,8 +77,9 @@ jobs:
           context: src
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-          load: true # Make image available locally
-          outputs: type=image,"name=${{ env.DOCKERHUB_REPO }},${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
+          outputs: |
+            type=image,"name=${{ env.DOCKERHUB_REPO }},${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
+            type=docker,"name=${{ env.DOCKERHUB_REPO }},${{ env.GHCR_REPO }}"
 
       # Run SQL Server docker image
       - name: Run SQL Server
@@ -88,7 +89,7 @@ jobs:
 
           docker run --name mssql -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d ${{ matrix.sql-image }}
 
-          sleep 5
+          sleep 10
 
           docker logs mssql
 
