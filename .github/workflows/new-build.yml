@@ -19,9 +19,12 @@ jobs:
           - platform: linux/amd64
             runner: ubuntu-latest
             sql-image: mcr.microsoft.com/mssql/server:2022-latest
+          # - platform: linux/arm64
+          #   runner: ubuntu-24.04-arm
+          #   sql-image: mcr.microsoft.com/azure-sql-edge:latest
           - platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            sql-image: mcr.microsoft.com/azure-sql-edge:latest
+            runner: macos-latest
+            sql-image: mcr.microsoft.com/mssql/server:2022-latest
 
     steps:
       - name: Checkout repository
