@@ -87,9 +87,9 @@ jobs:
         run: |
           docker images
 
-          docker run --name mssql -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d ${{ matrix.sql-image }}
+          docker run --cap-add SYS_PTRACE --name mssql -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d ${{ matrix.sql-image }}
 
-          sleep 10
+          sleep 15
 
           docker logs mssql
 
