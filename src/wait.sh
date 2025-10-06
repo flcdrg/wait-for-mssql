@@ -5,6 +5,7 @@ max=${max:-10}
 server=${server:-host.docker.internal}
 username=${username:-sa}
 password=${password:-yourStrong(!)Password}
+database=${database:-}
 
 while [ $# -gt 0 ]; do
 
@@ -17,6 +18,7 @@ while [ $# -gt 0 ]; do
         server) server=$2;;
         username) username=$2;;
         password) password=$2;;
+        database) database=$2;;
         verbose) verbose=$2;;
         *) break;
         esac;
@@ -36,6 +38,7 @@ if [ "$verbose" == "true" ]; then
     echo "server: $server"
     echo "username: $username"
     echo "password: $password"
+    echo "database: $database"
 fi
 
 SQLCMDPASSWORD=$password 
@@ -49,7 +52,20 @@ while [ "$state" != "" ]; do
     # -h -1     Don't print headings
     # -W        remove trailing spaces
 
-    state=`./sqlcmd -C -S $server -U $username -Q 'SET NOCOUNT ON; SELECT name, state_desc from sys.databases WHERE state NOT IN (0, 6, 10)' --headers="-1" -W -s " " `
+    if [ -z "$database" ]; then
+        # Check all databases
+        state=`./sqlcmd -C -S $server -U $username -Q 'SET NOCOUNT ON; SELECT name, state_desc from sys.databases WHERE state NOT IN (0, 6, 10)' --headers="-1" -W -s " " `
+    else
+        # Check specific database - wait until it exists and is ONLINE (state = 0)
+        state=`./sqlcmd -C -S $server -U $username -Q "SET NOCOUNT ON; SELECT name, state_desc from sys.databases WHERE name = '$database' AND state <> 0" --headers="-1" -W -s " " `
+        
+        # Also check if database exists at all
+        exists=`./sqlcmd -C -S $server -U $username -Q "SET NOCOUNT ON; SELECT COUNT(*) from sys.databases WHERE name = '$database'" --headers="-1" -W`
+        
+        if [ "$exists" == "0" ]; then
+            state="Database '$database' does not exist yet"
+        fi
+    fi
 
     if [ $? -ne 0 ]; then
         state="Error connecting"
@@ -67,4 +83,8 @@ while [ "$state" != "" ]; do
 
 done
 
-echo "All databases ready"
+if [ -z "$database" ]; then
+    echo "All databases ready"
+else
+    echo "Database '$database' is ready"
+fi

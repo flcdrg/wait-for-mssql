@@ -1,19 +1,17 @@
 services:
   mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: chriseaton/adventureworks:latest
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=yourStrong(!)Password
     ports:
       - "1433:1433"
-    volumes:
-      - ./.data:/var/opt/mssql/data
     # logging:
     #   driver: none
 
   wait:
     image: wait-for-mssql:latest
-    command: --max 15 --verbose true
+    command: --max 10 --delay 10 --verbose true --database AdventureWorks
 
     depends_on:
       - mssql
