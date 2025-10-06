@@ -15,6 +15,7 @@ If it succeeds it returns 0, but if it fails to connect after a certain number o
 - `--server` - the name of the server hosting SQL Server
 - `--username` - username
 - `--password` - password
+- `--database` - (optional) the name of a specific database to wait for. If not specified, waits for all databases to be ready
 - `--delay` - how many seconds to wait between attempts (defaults to 3)
 - `--max` - maximum number of connection attempts to make (defaults to 10)
 
@@ -42,4 +43,16 @@ Connect to an instance running on `myserver` on port 8000 with username `sa` and
 
 ```bash
 docker run flcdrg/wait-for-mssql:latest --server myserver,8000
+```
+
+Wait for a specific database named `MyDatabase` to be ready
+
+```bash
+docker run flcdrg/wait-for-mssql:latest --database MyDatabase
+```
+
+Wait for a specific database on a custom server
+
+```bash
+docker run flcdrg/wait-for-mssql:latest --server myserver --username flcdrg --password mySuperPassword(!) --database MyDatabase
 ```
