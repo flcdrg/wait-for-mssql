@@ -96,7 +96,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          load: true # Make image available locally
+          load: ${{ github.event_name == 'pull_request' }} # Make image available locally for tests
 
       # Run SQL Server docker image
       - name: Run SQL Server
