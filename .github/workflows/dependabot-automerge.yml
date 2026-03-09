@@ -1,0 +1,35 @@
+name: Dependabot auto-merge
+on: pull_request
+
+# Based on https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/automating-dependabot-with-github-actions#enabling-automerge-on-a-pull-request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'flcdrg/wait-for-mssql'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2.5.0
+        continue-on-error: true # Handle 'PR is not from Dependabot, nothing to do' error quietly
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Enable auto-merge for Dependabot PRs
+        if: ${{
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor' ||
+          contains(steps.metadata.outputs.dependency-names, 'actions/checkout') ||
+          contains(steps.metadata.outputs.dependency-names, 'sigstore/cosign-installer') ||
+          contains(steps.metadata.outputs.dependency-names, 'docker/setup-buildx-action') ||
+          contains(steps.metadata.outputs.dependency-names, 'docker/login-action') ||
+          contains(steps.metadata.outputs.dependency-names, 'docker/metadata-action') ||
+          contains(steps.metadata.outputs.dependency-names, 'docker/build-push-action')
+          }}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
