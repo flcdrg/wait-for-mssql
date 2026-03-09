@@ -1,6 +1,5 @@
-
 trigger:
-- main
+  - main
 
 resources:
   containers:
@@ -22,15 +21,15 @@ services:
   sqlserver: mssql
 
 steps:
-- task: DockerInstaller@0
-  displayName: "Docker: Install tool"
-  inputs:
-    dockerVersion: "29.2.1"
+  - task: DockerInstaller@0
+    displayName: "Docker: Install tool"
+    inputs:
+      dockerVersion: "29.2.1"
 
-- pwsh: ./build.ps1
+  - pwsh: ./build.ps1
 
-- script: |
-    echo "docker run --rm --network $(Agent.ContainerNetwork) wait-for-mssql --server sqlserver --username sa --password $(MSSQL_SA_PASSWORD)"
+  - script: |
+      echo "docker run --rm --network $(Agent.ContainerNetwork) wait-for-mssql --server sqlserver --username sa --password $(MSSQL_SA_PASSWORD)"
 
-    docker run --rm --network $(Agent.ContainerNetwork) wait-for-mssql --server sqlserver --username sa --password "$(MSSQL_SA_PASSWORD)"
-  displayName: Run container
+      docker run --rm --network $(Agent.ContainerNetwork) wait-for-mssql --server sqlserver --username sa --password "$(MSSQL_SA_PASSWORD)"
+    displayName: Run container
